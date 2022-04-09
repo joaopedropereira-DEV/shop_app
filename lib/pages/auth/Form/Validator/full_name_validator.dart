@@ -1,4 +1,4 @@
-class ValidatorFullName {
+class FullNameCheck {
   static String? validFullName(String fullName) {
     RegExp hasDigits = RegExp(r"/^?=.*\d$/");
     RegExp hasSpecialCharacter = RegExp(r"/^?=.*[$*&@#]$/");

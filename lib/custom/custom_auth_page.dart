@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/pages/custom/auth_custom_clipper.dart';
+import 'package:shop_app/custom/auth_custom_clipper.dart';
 
 class CustomPageAuth extends StatelessWidget {
   const CustomPageAuth({

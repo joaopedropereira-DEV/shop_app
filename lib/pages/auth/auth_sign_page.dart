@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/custom/custom_auth_page.dart';
 import 'package:shop_app/pages/auth/Form/auth_form_sign.dart';
-import '../custom/custom_auth_page.dart';
 
 class AuthSignPage extends StatefulWidget {
   const AuthSignPage({Key? key}) : super(key: key);

@@ -65,7 +65,7 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
             onSaved: (email) => _authLoginData["email"] = email ?? "",
             validator: (_email) {
               final email = _email ?? "";
-              EmailValidator.validEmail(email);
+              EmailCheck.validEmail(email);
             },
             focusNode: _emailFocus,
             keyboardType: TextInputType.emailAddress,
@@ -86,7 +86,7 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
             onSaved: (password) => _authLoginData["password"] = password ?? "",
             validator: (_password) {
               final password = _password ?? "";
-              ValidatorPassword.validPassword(password);
+              PasswordCheck.validPassword(password);
             },
             focusNode: _passwordFocus,
             obscureText: true,

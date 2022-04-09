@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/components/auth_button.dart';
+import 'package:shop_app/custom/custom_auth_page.dart';
 import 'package:shop_app/pages/auth/Form/auth_form_login.dart';
 import 'package:shop_app/utils/app_routes.dart';
-
-import '../custom/custom_auth_page.dart';
 
 class AuthLoginPage extends StatefulWidget {
   AuthLoginPage({Key? key}) : super(key: key);

@@ -77,7 +77,7 @@ class _AuthFormSignState extends State<AuthFormSign> {
             onSaved: (name) => _authSignData["fullName"] = name ?? "",
             validator: (_name) {
               final name = _name ?? "";
-              ValidatorFullName.validFullName(name);
+              FullNameCheck.validFullName(name);
             },
             focusNode: _fullNameFocus,
             onFieldSubmitted: (_) {
@@ -99,7 +99,7 @@ class _AuthFormSignState extends State<AuthFormSign> {
             onSaved: (email) => _authSignData["email"] = email ?? "",
             validator: (_email) {
               final email = _email ?? "";
-              EmailValidator.validEmail(email);
+              EmailCheck.validEmail(email);
             },
             focusNode: _emailAdressFocus,
             onFieldSubmitted: (_) {
@@ -121,7 +121,7 @@ class _AuthFormSignState extends State<AuthFormSign> {
             onSaved: (password) => _authSignData["password"] = password ?? "",
             validator: (_password) {
               final password = _password ?? "";
-              ValidatorPassword.validPassword(password);
+              PasswordCheck.validPassword(password);
             },
             focusNode: _passwordFocus,
             controller: _passwordController,

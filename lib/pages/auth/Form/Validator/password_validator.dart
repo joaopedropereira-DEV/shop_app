@@ -1,4 +1,4 @@
-class ValidatorPassword {
+class PasswordCheck {
   static String? validPassword(String password) {
     RegExp hasDigits = RegExp(r'/^?=.*\d$/');
     RegExp hasLowercase = RegExp(r'/^?=.*[a-z]$/');
