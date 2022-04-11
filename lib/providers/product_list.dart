@@ -9,8 +9,8 @@ import 'package:shop_app/utils/constants.dart';
 
 class ProductList with ChangeNotifier {
   // ==== Atributos e variaveis ====
-
-  final List<Product> _items = [];
+  String _token;
+  List<Product> _items = [];
 
   bool _showFavoriteOnly = false;
 
@@ -20,6 +20,9 @@ class ProductList with ChangeNotifier {
     }
     return [..._items];
   }
+
+  // "this._items" -> para não perder os items, qunado o token for alterado
+  ProductList(this._token, this._items);
 
   // ==== Metodos ====
 
@@ -65,7 +68,9 @@ class ProductList with ChangeNotifier {
   Future<void> loadProducts() async {
     _items.clear();
 
-    final response = await http.get(Uri.parse("${Constants.urlProduct}.json"));
+    final response = await http.get(
+      Uri.parse("${Constants.urlProduct}.json?auth=$_token"),
+    );
 
     if (response.body == "null") return;
 

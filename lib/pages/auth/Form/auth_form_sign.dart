@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/pages/auth/Form/Validator/email_validator.dart';
 import 'package:shop_app/pages/auth/Form/Validator/full_name_validator.dart';
 import 'package:shop_app/pages/auth/Form/Validator/password_validator.dart';
+import '../../../Error/auth_exceptions.dart';
 import '../../../components/auth_button.dart';
 import '../../../providers/auth.dart';
 
@@ -45,6 +46,22 @@ class _AuthFormSignState extends State<AuthFormSign> {
     _confirmPasswordFocus.dispose();
   }
 
+  void _showErrorDialogSign(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Ocorreu um erro"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text("Ok"),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _signSubmit() async {
     bool isValid = _signKey.currentState?.validate() ?? false;
 
@@ -57,11 +74,17 @@ class _AuthFormSignState extends State<AuthFormSign> {
     // Provider
     Auth auth = Provider.of<Auth>(context, listen: false);
 
-    // Processo de registrar
-    await auth.signUp(
-      _authSignData["email"]!,
-      _authSignData["password"]!,
-    );
+    try {
+      // Processo de Registrar
+      await auth.signUp(
+        _authSignData["email"]!,
+        _authSignData["password"]!,
+      );
+    } on AuthExceptions catch (error) {
+      _showErrorDialogSign(error.toString());
+    } catch (error) {
+      _showErrorDialogSign("Ocorreu um erro inesperado");
+    }
 
     Navigator.of(context).pop();
     widget.offLoading();

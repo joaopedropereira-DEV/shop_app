@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/Error/auth_exceptions.dart';
 import 'package:shop_app/pages/auth/Form/Validator/email_validator.dart';
 import 'package:shop_app/pages/auth/Form/Validator/password_validator.dart';
 
@@ -27,6 +28,22 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
   final _loginKey = GlobalKey<FormState>();
   Map<String, String> _authLoginData = {"email": '', "password": ''};
 
+  void _showErrorDialogLogin(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Ocorreu um erro"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text("Ok"),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _loginSubmit() async {
     bool isValid = _loginKey.currentState?.validate() ?? false;
 
@@ -39,11 +56,17 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
     // Provider
     Auth auth = Provider.of<Auth>(context, listen: false);
 
-    // Processo de Login
-    await auth.signUp(
-      _authLoginData["email"]!,
-      _authLoginData["password"]!,
-    );
+    try {
+      // Processo de Login
+      await auth.signUp(
+        _authLoginData["email"]!,
+        _authLoginData["password"]!,
+      );
+    } on AuthExceptions catch (error) {
+      _showErrorDialogLogin(error.toString());
+    } catch (error) {
+      _showErrorDialogLogin("Ocorreu um erro inesperado");
+    }
 
     widget.offLoading();
   }
