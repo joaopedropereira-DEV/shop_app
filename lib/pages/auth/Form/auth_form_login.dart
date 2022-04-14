@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/Error/auth_exceptions.dart';
 import 'package:shop_app/pages/auth/Form/Validator/email_validator.dart';
 import 'package:shop_app/pages/auth/Form/Validator/password_validator.dart';
-
 import '../../../components/auth_button.dart';
 import '../../../providers/auth.dart';
 
@@ -88,7 +87,7 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
             onSaved: (email) => _authLoginData["email"] = email ?? "",
             validator: (_email) {
               final email = _email ?? "";
-              EmailCheck.validEmail(email);
+              return EmailCheck.validEmail(email);
             },
             focusNode: _emailFocus,
             keyboardType: TextInputType.emailAddress,
@@ -109,7 +108,7 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
             onSaved: (password) => _authLoginData["password"] = password ?? "",
             validator: (_password) {
               final password = _password ?? "";
-              PasswordCheck.validPassword(password);
+              return PasswordCheck.validPassword(password);
             },
             focusNode: _passwordFocus,
             obscureText: true,

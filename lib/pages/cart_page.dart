@@ -78,7 +78,7 @@ class CartButton extends StatefulWidget {
 }
 
 class _CartButtonState extends State<CartButton> {
-  bool _isLoading = false;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +86,7 @@ class _CartButtonState extends State<CartButton> {
       onPressed: widget.cartItem.itemCount == 0
           ? null
           : () async {
-              setState(() => _isLoading = true);
+              setState(() => isLoading = true);
 
               await Provider.of<OrderList>(
                 context,
@@ -95,7 +95,7 @@ class _CartButtonState extends State<CartButton> {
 
               widget.cartItem.clear();
 
-              setState(() => _isLoading = false);
+              setState(() => isLoading = false);
             },
       child: const Text(
         "COMPRAR",
