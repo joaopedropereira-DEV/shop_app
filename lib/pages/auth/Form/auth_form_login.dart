@@ -11,10 +11,12 @@ class AuthFormLogin extends StatefulWidget {
     Key? key,
     required this.onLoading,
     required this.offLoading,
+    required this.showDialogLogin,
   }) : super(key: key);
 
   final void Function() onLoading;
   final void Function() offLoading;
+  final void Function(String) showDialogLogin;
 
   @override
   State<AuthFormLogin> createState() => _AuthFormLoginState();
@@ -26,22 +28,6 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
 
   final _loginKey = GlobalKey<FormState>();
   Map<String, String> _authLoginData = {"email": '', "password": ''};
-
-  void _showErrorDialogLogin(String message) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Ocorreu um erro"),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text("Ok"),
-          ),
-        ],
-      ),
-    );
-  }
 
   Future<void> _loginSubmit() async {
     bool isValid = _loginKey.currentState?.validate() ?? false;
@@ -57,14 +43,14 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
 
     try {
       // Processo de Login
-      await auth.signUp(
+      await auth.signIn(
         _authLoginData["email"]!,
         _authLoginData["password"]!,
       );
     } on AuthExceptions catch (error) {
-      _showErrorDialogLogin(error.toString());
+      widget.showDialogLogin(error.toString());
     } catch (error) {
-      _showErrorDialogLogin("Ocorreu um erro inesperado");
+      widget.showDialogLogin("Ocorreu um erro inesperado");
     }
 
     widget.offLoading();

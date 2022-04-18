@@ -26,6 +26,22 @@ class _AuthLoginPageState extends State<AuthLoginPage> {
     });
   }
 
+  void _showErrorDialogLogin(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text("Ocorreu um erro"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text("Ok"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
@@ -56,7 +72,10 @@ class _AuthLoginPageState extends State<AuthLoginPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 22),
                       child: AuthFormLogin(
-                          onLoading: _onLoading, offLoading: _offLoading),
+                        onLoading: _onLoading,
+                        offLoading: _offLoading,
+                        showDialogLogin: _showErrorDialogLogin,
+                      ),
                     ),
                     SizedBox(
                       height: 18,

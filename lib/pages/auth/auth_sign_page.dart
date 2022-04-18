@@ -24,6 +24,22 @@ class _AuthSignPageState extends State<AuthSignPage> {
     });
   }
 
+  void _showErrorDialogSign(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Ocorreu um erro"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text("Ok"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
@@ -56,6 +72,7 @@ class _AuthSignPageState extends State<AuthSignPage> {
                       child: AuthFormSign(
                         onLoading: _onLoading,
                         offLoading: _offLoading,
+                        showDialogSignUp: _showErrorDialogSign,
                       ),
                     ),
                   ],

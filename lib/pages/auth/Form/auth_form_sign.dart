@@ -12,10 +12,12 @@ class AuthFormSign extends StatefulWidget {
     Key? key,
     required this.onLoading,
     required this.offLoading,
+    required this.showDialogSignUp,
   }) : super(key: key);
 
   final void Function() onLoading;
   final void Function() offLoading;
+  final void Function(String) showDialogSignUp;
 
   @override
   State<AuthFormSign> createState() => _AuthFormSignState();
@@ -36,32 +38,6 @@ class _AuthFormSignState extends State<AuthFormSign> {
     "password": ''
   };
 
-  @override
-  void dispose() {
-    super.dispose();
-    _fullNameFocus.dispose();
-    _emailAdressFocus.dispose();
-    _passwordFocus.dispose();
-    _passwordController.dispose();
-    _confirmPasswordFocus.dispose();
-  }
-
-  void _showErrorDialogSign(String message) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Ocorreu um erro"),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text("Ok"),
-          ),
-        ],
-      ),
-    );
-  }
-
   Future<void> _signSubmit() async {
     bool isValid = _signKey.currentState?.validate() ?? false;
 
@@ -81,13 +57,23 @@ class _AuthFormSignState extends State<AuthFormSign> {
         _authSignData["password"]!,
       );
     } on AuthExceptions catch (error) {
-      _showErrorDialogSign(error.toString());
+      widget.showDialogSignUp(error.toString());
     } catch (error) {
-      _showErrorDialogSign("Ocorreu um erro inesperado");
+      widget.showDialogSignUp("Ocorreu um erro inesperado");
     }
 
-    Navigator.of(context).pop();
+    Navigator.pop(context);
     widget.offLoading();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _fullNameFocus.dispose();
+    _emailAdressFocus.dispose();
+    _passwordFocus.dispose();
+    _passwordController.dispose();
+    _confirmPasswordFocus.dispose();
   }
 
   @override

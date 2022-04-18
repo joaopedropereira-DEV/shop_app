@@ -9,7 +9,8 @@ import 'package:shop_app/utils/constants.dart';
 
 class ProductList with ChangeNotifier {
   // ==== Atributos e variaveis ====
-  String _token;
+  final String _token;
+  final String _userId;
   List<Product> _items = [];
 
   bool _showFavoriteOnly = false;
@@ -22,7 +23,11 @@ class ProductList with ChangeNotifier {
   }
 
   // "this._items" -> para não perder os items, qunado o token for alterado
-  ProductList(this._token, this._items);
+  ProductList([
+    this._token = '',
+    this._userId = '',
+    this._items = const [],
+  ]);
 
   // ==== Metodos ====
 
@@ -41,18 +46,17 @@ class ProductList with ChangeNotifier {
   }
 
   // Atualizar Favorito (patch)
-  Future<void> patchFavorite(Product product) async {
+  Future<void> patchFavorite(Product product, String userId) async {
     int index = _items.indexWhere((prod) => prod.id == product.id);
 
     if (index >= 0) {
       bool isFavorite = product.isFavorite = !product.isFavorite;
       notifyListeners();
 
-      final response = await http.patch(
-        Uri.parse("${Constants.urlProduct}/${product.id}.json"),
-        body: jsonEncode({
-          "isFavorite": isFavorite,
-        }),
+      final response = await http.put(
+        Uri.parse(
+            "${Constants.urlUserFavorite}/$userId/${product.id}.json?auth=$_token"),
+        body: jsonEncode(isFavorite),
       );
 
       if (response.statusCode >= 400) {
@@ -74,11 +78,17 @@ class ProductList with ChangeNotifier {
 
     if (response.body == "null") return;
 
+    final favResponse = await http.put(
+      Uri.parse("${Constants.urlUserFavorite}/$_userId.json?auth=$_token"),
+    );
+
+    Map<String, dynamic> favData =
+        favResponse == 'null' ? {} : jsonDecode(favResponse.body);
+
     Map<String, dynamic> data = jsonDecode(response.body);
 
-    print(data);
-
     data.forEach((productId, productData) {
+      final isFavorite = favData[productId] ?? false;
       _items.add(
         Product(
           id: productId,
@@ -86,7 +96,7 @@ class ProductList with ChangeNotifier {
           description: productData["description"],
           price: productData["price"],
           imageUrl: productData["imageUrl"],
-          isFavorite: productData["isFavorite"],
+          isFavorite: isFavorite,
         ),
       );
     });
@@ -118,7 +128,7 @@ class ProductList with ChangeNotifier {
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse("${Constants.urlProduct}/${product.id}.json"),
+        Uri.parse("${Constants.urlProduct}/${product.id}.json?auth=$_token"),
         body: jsonEncode(
           {
             "title": product.title,
@@ -144,7 +154,7 @@ class ProductList with ChangeNotifier {
       notifyListeners();
 
       final response = await http.delete(
-        Uri.parse("${Constants.urlProduct}/${product.id}.json"),
+        Uri.parse("${Constants.urlProduct}/${product.id}.json?auth=$_token"),
       );
 
       if (response.statusCode >= 400) {
@@ -163,14 +173,13 @@ class ProductList with ChangeNotifier {
   // Adicionar Produto (post)
   Future<void> addProduct(Product product) async {
     final response = await http.post(
-      Uri.parse("${Constants.urlProduct}.json"),
+      Uri.parse("${Constants.urlProduct}.json?auth=$_token"),
       body: jsonEncode(
         {
           "title": product.title,
           "description": product.description,
           "price": product.price,
           "imageUrl": product.imageUrl,
-          "isFavorite": product.isFavorite,
         },
       ),
     );

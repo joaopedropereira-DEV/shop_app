@@ -5,6 +5,8 @@ import 'package:shop_app/providers/cart_item.dart';
 import 'package:shop_app/providers/product_list.dart';
 import 'package:shop_app/utils/app_routes.dart';
 
+import '../providers/auth.dart';
+
 class ProductGridItem extends StatelessWidget {
   const ProductGridItem({Key? key}) : super(key: key);
 
@@ -12,6 +14,7 @@ class ProductGridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context);
     final cart = Provider.of<CartItem>(context);
+    final auth = Provider.of<Auth>(context);
 
     final messenger = ScaffoldMessenger.of(context);
 
@@ -56,7 +59,7 @@ class ProductGridItem extends StatelessWidget {
                         await Provider.of<ProductList>(
                           context,
                           listen: false,
-                        ).patchFavorite(product);
+                        ).patchFavorite(product, auth.userId ?? "");
 
                         if (product.isFavorite == true) {
                           messenger.showSnackBar(
