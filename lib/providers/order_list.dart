@@ -23,6 +23,7 @@ class OrderList with ChangeNotifier {
     return _items.length;
   }
 
+  // Adicionar Pedidos (post)
   Future<void> addOrder(CartItem cartItem) async {
     final date = DateTime.now();
 
@@ -57,6 +58,7 @@ class OrderList with ChangeNotifier {
     notifyListeners();
   }
 
+  // Carregar Pedidos (get)
   Future<void> loadOrders() async {
     List<Order> items = [];
 

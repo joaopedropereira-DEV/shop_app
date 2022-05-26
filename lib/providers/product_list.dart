@@ -45,9 +45,9 @@ class ProductList with ChangeNotifier {
     notifyListeners();
   }
 
-  // Atualizar Favorito (patch)
+  // Atualizar Favorito (put)
   Future<void> patchFavorite(Product product, String userId) async {
-    int index = _items.indexWhere((prod) => prod.id == product.id);
+    int index = _items.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
       bool isFavorite = product.isFavorite = !product.isFavorite;
@@ -72,12 +72,14 @@ class ProductList with ChangeNotifier {
   Future<void> loadProducts() async {
     _items.clear();
 
+    // Resposta equivalente aos Products
     final response = await http.get(
       Uri.parse("${Constants.urlProduct}.json?auth=$_token"),
     );
 
     if (response.body == "null") return;
 
+    // Resposta equivalente aos Favorite Products
     final favResponse = await http.put(
       Uri.parse("${Constants.urlUserFavorite}/$_userId.json?auth=$_token"),
     );
@@ -85,9 +87,9 @@ class ProductList with ChangeNotifier {
     Map<String, dynamic> favData =
         favResponse == 'null' ? {} : jsonDecode(favResponse.body);
 
-    Map<String, dynamic> data = jsonDecode(response.body);
+    Map<String, dynamic> prodData = jsonDecode(response.body);
 
-    data.forEach((productId, productData) {
+    prodData.forEach((productId, productData) {
       final isFavorite = favData[productId] ?? false;
       _items.add(
         Product(
