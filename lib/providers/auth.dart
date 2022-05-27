@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_app/Error/auth_exceptions.dart';
+import 'package:shop_app/data/store.dart';
+import 'package:shop_app/data/store.dart';
 
 class Auth with ChangeNotifier {
   String? _token;
@@ -10,6 +12,9 @@ class Auth with ChangeNotifier {
   String? _userId;
   DateTime? _expiryDate;
   Timer? _logoutTimer;
+
+  // Chave para o acesso de dados de persistencia
+  String _storeAuthKey = "userData";
 
   bool get isAuth {
     final isValid = _expiryDate?.isAfter(DateTime.now()) ?? false;
@@ -50,12 +55,19 @@ class Auth with ChangeNotifier {
       _token = body['idToken'];
       _email = body['email'];
       _userId = body['localId'];
-
       _expiryDate = DateTime.now().add(
         Duration(
           seconds: int.parse(body['expiresIn']),
         ),
       );
+
+      Store.saveMap(_storeAuthKey, {
+        'token': _token,
+        'email': _email,
+        'userId': _userId,
+        'expiryDate': _expiryDate!.toIso8601String()
+      });
+
       _autoLogout();
       notifyListeners();
     }
@@ -69,14 +81,35 @@ class Auth with ChangeNotifier {
     return authenticate(email, password, 'signInWithPassword');
   }
 
+  Future<void> tryAutoLogin() async {
+    if (isAuth) return;
+
+    final userData = await Store.getMap(_storeAuthKey);
+    if (userData.isEmpty) return;
+
+    final expiryDate = DateTime.parse(userData['expiryDate']);
+    if (expiryDate.isBefore(DateTime.now())) return;
+
+    _token = userData['token'];
+    _email = userData['email'];
+    _userId = userData['userId'];
+    _expiryDate = userData['expiryData'];
+
+    _autoLogout();
+    notifyListeners();
+  }
+
   void logout() {
     _token = null;
     _email = null;
     _userId = null;
     _expiryDate = null;
+
     _clearLogoutTimer();
 
-    notifyListeners();
+    Store.remove(_storeAuthKey).then((_) {
+      notifyListeners();
+    });
   }
 
   void _clearLogoutTimer() {
