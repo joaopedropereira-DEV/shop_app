@@ -1,51 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shop_app/custom/custom_auth_page.dart';
 import 'package:shop_app/pages/auth/Form/auth_form_sign.dart';
+import 'package:shop_app/providers/auth.dart';
 
-class AuthSignPage extends StatefulWidget {
+class AuthSignPage extends StatelessWidget {
   const AuthSignPage({Key? key}) : super(key: key);
-
-  @override
-  State<AuthSignPage> createState() => _AuthSignPageState();
-}
-
-class _AuthSignPageState extends State<AuthSignPage> {
-  bool _isLoading = false;
-
-  void _onLoading() {
-    setState(() {
-      _isLoading = true;
-    });
-  }
-
-  void _offLoading() {
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-  void _showErrorDialogSign(String message) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Ocorreu um erro"),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text("Ok"),
-          ),
-        ],
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
-
+    var auth = Provider.of<Auth>(context);
     return Scaffold(
-      body: _isLoading
+      body: auth.inProgress
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -69,11 +36,7 @@ class _AuthSignPageState extends State<AuthSignPage> {
                     SizedBox(height: 30),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: AuthFormSign(
-                        onLoading: _onLoading,
-                        offLoading: _offLoading,
-                        showDialogSignUp: _showErrorDialogSign,
-                      ),
+                      child: AuthFormSign(),
                     ),
                   ],
                 ),

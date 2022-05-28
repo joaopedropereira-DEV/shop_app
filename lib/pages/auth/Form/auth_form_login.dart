@@ -9,14 +9,7 @@ import '../../../providers/auth.dart';
 class AuthFormLogin extends StatefulWidget {
   AuthFormLogin({
     Key? key,
-    required this.onLoading,
-    required this.offLoading,
-    required this.showDialogLogin,
   }) : super(key: key);
-
-  final void Function() onLoading;
-  final void Function() offLoading;
-  final void Function(String) showDialogLogin;
 
   @override
   State<AuthFormLogin> createState() => _AuthFormLoginState();
@@ -29,17 +22,33 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
   final _loginKey = GlobalKey<FormState>();
   Map<String, String> _authLoginData = {"email": '', "password": ''};
 
+  void _showErrorDialogLogin(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text("Ocorreu um erro"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text("Ok"),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _loginSubmit() async {
     bool isValid = _loginKey.currentState?.validate() ?? false;
 
     if (!isValid) return;
 
-    widget.onLoading();
+    // Provider
+    Auth auth = Provider.of<Auth>(context, listen: false);
 
     _loginKey.currentState?.save();
 
-    // Provider
-    Auth auth = Provider.of<Auth>(context, listen: false);
+    auth.onAuthProgress();
 
     try {
       // Processo de Login
@@ -48,12 +57,12 @@ class _AuthFormLoginState extends State<AuthFormLogin> {
         _authLoginData["password"]!,
       );
     } on AuthExceptions catch (error) {
-      widget.showDialogLogin(error.toString());
+      _showErrorDialogLogin(error.toString());
     } catch (error) {
-      widget.showDialogLogin("Ocorreu um erro inesperado");
+      _showErrorDialogLogin("Ocorreu um erro inesperado");
     }
 
-    widget.offLoading();
+    auth.offAuthProgress();
   }
 
   @override

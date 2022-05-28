@@ -10,14 +10,7 @@ import '../../../providers/auth.dart';
 class AuthFormSign extends StatefulWidget {
   const AuthFormSign({
     Key? key,
-    required this.onLoading,
-    required this.offLoading,
-    required this.showDialogSignUp,
   }) : super(key: key);
-
-  final void Function() onLoading;
-  final void Function() offLoading;
-  final void Function(String) showDialogSignUp;
 
   @override
   State<AuthFormSign> createState() => _AuthFormSignState();
@@ -43,12 +36,12 @@ class _AuthFormSignState extends State<AuthFormSign> {
 
     if (!isValid) return;
 
-    widget.onLoading();
-
-    _signKey.currentState!.save();
-
     // Provider
     Auth auth = Provider.of<Auth>(context, listen: false);
+
+    auth.onAuthProgress();
+
+    _signKey.currentState!.save();
 
     try {
       // Processo de Registrar
@@ -57,13 +50,13 @@ class _AuthFormSignState extends State<AuthFormSign> {
         _authSignData["password"]!,
       );
     } on AuthExceptions catch (error) {
-      widget.showDialogSignUp(error.toString());
+      _showErrorDialogSign(error.toString());
     } catch (error) {
-      widget.showDialogSignUp("Ocorreu um erro inesperado");
+      _showErrorDialogSign("Ocorreu um erro inesperado");
     }
 
     Navigator.pop(context);
-    widget.offLoading();
+    auth.offAuthProgress();
   }
 
   @override
@@ -74,6 +67,22 @@ class _AuthFormSignState extends State<AuthFormSign> {
     _passwordFocus.dispose();
     _passwordController.dispose();
     _confirmPasswordFocus.dispose();
+  }
+
+  void _showErrorDialogSign(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Ocorreu um erro"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text("Ok"),
+          ),
+        ],
+      ),
+    );
   }
 
   @override

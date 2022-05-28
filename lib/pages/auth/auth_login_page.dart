@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shop_app/components/auth_button.dart';
 import 'package:shop_app/custom/custom_auth_page.dart';
 import 'package:shop_app/pages/auth/Form/auth_form_login.dart';
+import 'package:shop_app/providers/auth.dart';
 import 'package:shop_app/utils/app_routes.dart';
 
 class AuthLoginPage extends StatefulWidget {
@@ -12,42 +14,12 @@ class AuthLoginPage extends StatefulWidget {
 }
 
 class _AuthLoginPageState extends State<AuthLoginPage> {
-  bool _isLoading = false;
-
-  void _onLoading() {
-    setState(() {
-      _isLoading = true;
-    });
-  }
-
-  void _offLoading() {
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-  void _showErrorDialogLogin(String message) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text("Ocorreu um erro"),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text("Ok"),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
-
+    var auth = Provider.of<Auth>(context);
     return Scaffold(
-      body: _isLoading
+      body: auth.inProgress
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -71,11 +43,7 @@ class _AuthLoginPageState extends State<AuthLoginPage> {
                     SizedBox(height: deviceSize.height * 0.05),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 22),
-                      child: AuthFormLogin(
-                        onLoading: _onLoading,
-                        offLoading: _offLoading,
-                        showDialogLogin: _showErrorDialogLogin,
-                      ),
+                      child: AuthFormLogin(),
                     ),
                     SizedBox(
                       height: 18,

@@ -13,6 +13,8 @@ class Auth with ChangeNotifier {
   DateTime? _expiryDate;
   Timer? _logoutTimer;
 
+  bool inProgress = false;
+
   // Chave para o acesso de dados de persistencia
   String _storeAuthKey = "userData";
 
@@ -110,6 +112,8 @@ class Auth with ChangeNotifier {
     Store.remove(_storeAuthKey).then((_) {
       notifyListeners();
     });
+
+    offAuthProgress();
   }
 
   void _clearLogoutTimer() {
@@ -127,5 +131,17 @@ class Auth with ChangeNotifier {
       Duration(seconds: timeToLogout ?? 0),
       logout,
     );
+
+    offAuthProgress();
+  }
+
+  void onAuthProgress() {
+    inProgress = true;
+    notifyListeners();
+  }
+
+  void offAuthProgress() {
+    inProgress = false;
+    notifyListeners();
   }
 }
