@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/pages/auth/auth_sign_page.dart';
+import 'package:shop_app/pages/auth_page.dart';
 import 'package:shop_app/pages/products_overview_pages.dart';
 import 'package:shop_app/providers/auth.dart';
 
@@ -21,7 +21,7 @@ class AuthOrHome extends StatelessWidget {
           return Center(
               child: Text("Existe um error, tente novamente mais tarde"));
         } else {
-          return auth.isAuth ? ProductOverviewPage() : AuthSignPage();
+          return auth.isAuth ? ProductOverviewPage() : AuthPage();
         }
       },
     );

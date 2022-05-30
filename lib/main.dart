@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/pages/auth/auth_sign_page.dart';
 import 'package:shop_app/pages/auth_or_home.dart';
+import 'package:shop_app/pages/auth_page.dart';
 import 'package:shop_app/pages/cart_page.dart';
 import 'package:shop_app/pages/orders_page.dart';
 import 'package:shop_app/pages/product_detail_page.dart';
@@ -61,7 +61,7 @@ class ShopApp extends StatelessWidget {
         initialRoute: AppRoutes.AUTH_OR_HOME,
         routes: {
           AppRoutes.AUTH_OR_HOME: (context) => AuthOrHome(),
-          AppRoutes.AUTH_SIGNUP: (context) => AuthSignPage(),
+          AppRoutes.AUTH_SIGNUP: (context) => AuthPage(),
           AppRoutes.HOME: (context) => ProductOverviewPage(),
           AppRoutes.PRODUCT_DETAIL: (context) => const ProductDetailPage(),
           AppRoutes.CART: (context) => const CartPage(),
