@@ -8,7 +8,7 @@ import 'package:shop_app/utils/constants.dart';
 
 class OrderList with ChangeNotifier {
   final String _token;
-  final String _userId;
+  String _userId;
   List<Order> _items = [];
 
   OrderList([
@@ -64,8 +64,9 @@ class OrderList with ChangeNotifier {
   Future<void> loadOrders() async {
     List<Order> items = [];
 
-    final response = await http
-        .get(Uri.parse("${Constants.urlOrder}/$_userId.json?auth=$_token"));
+    final response = await http.get(
+      Uri.parse("${Constants.urlOrder}/$_userId.json?auth=$_token"),
+    );
 
     if (response.body == "null") return;
 
@@ -85,9 +86,7 @@ class OrderList with ChangeNotifier {
               price: item['price'],
             );
           }).toList(),
-          date: DateTime.parse(
-            orderData['date'],
-          ),
+          date: DateTime.parse(orderData['date']),
         ),
       );
     });

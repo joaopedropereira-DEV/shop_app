@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_app/Error/auth_exceptions.dart';
 import 'package:shop_app/data/store.dart';
-import 'package:shop_app/data/store.dart';
 
 class Auth with ChangeNotifier {
   String? _token;

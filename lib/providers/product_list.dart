@@ -10,7 +10,7 @@ import 'package:shop_app/utils/constants.dart';
 class ProductList with ChangeNotifier {
   // ==== Atributos e variaveis ====
   final String _token;
-  final String _userId;
+  String _userId;
   List<Product> _items = [];
 
   bool _showFavoriteOnly = false;
@@ -50,17 +50,17 @@ class ProductList with ChangeNotifier {
     int index = _items.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
-      bool isFavorite = product.isFavorite = !product.isFavorite;
+      bool isFavorite = !product.isFavorite;
       notifyListeners();
 
       final response = await http.put(
         Uri.parse(
-            "${Constants.urlUserFavorite}/$userId/${product.id}.json?auth=$_token"),
+            "${Constants.urlUserFavorite}/$_userId/${product.id}.json?auth=$_token"),
         body: jsonEncode(isFavorite),
       );
 
       if (response.statusCode >= 400) {
-        isFavorite = product.isFavorite = !product.isFavorite;
+        isFavorite = !product.isFavorite;
       }
 
       _items[index].isFavorite = isFavorite;
@@ -80,9 +80,11 @@ class ProductList with ChangeNotifier {
     if (response.body == "null") return;
 
     // Resposta equivalente aos Favorite Products
-    final favResponse = await http.put(
+    final favResponse = await http.get(
       Uri.parse("${Constants.urlUserFavorite}/$_userId.json?auth=$_token"),
     );
+
+    print(favResponse.body);
 
     Map<String, dynamic> favData =
         favResponse == 'null' ? {} : jsonDecode(favResponse.body);
