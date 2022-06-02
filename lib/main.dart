@@ -13,6 +13,7 @@ import 'package:shop_app/providers/cart_item.dart';
 import 'package:shop_app/providers/order_list.dart';
 import 'package:shop_app/providers/product_list.dart';
 import 'package:shop_app/utils/app_routes.dart';
+import 'package:shop_app/utils/custom_route.dart';
 
 void main() => runApp(const ShopApp());
 
@@ -57,6 +58,12 @@ class ShopApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.deepOrange,
           primaryColor: Colors.deepOrange,
+          pageTransitionsTheme: PageTransitionsTheme(
+            builders: {
+              TargetPlatform.iOS: CustomPageTransitionsBuilder(),
+              TargetPlatform.android: CustomPageTransitionsBuilder(),
+            },
+          ),
         ),
         initialRoute: AppRoutes.AUTH_OR_HOME,
         routes: {

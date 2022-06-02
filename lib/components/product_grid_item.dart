@@ -43,10 +43,12 @@ class ProductGridItem extends StatelessWidget {
               child: Stack(
                 children: <Widget>[
                   Center(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(25),
-                      child: Image.network(
-                        product.imageUrl,
+                    child: Hero(
+                      tag: product.id,
+                      child: FadeInImage(
+                        placeholder:
+                            AssetImage("assets/icons/illustration.png"),
+                        image: NetworkImage(product.imageUrl),
                         fit: BoxFit.cover,
                       ),
                     ),
